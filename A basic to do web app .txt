@@ -1,0 +1,94 @@
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>To-Do App</title>
+<style>
+  /* Add some basic CSS for styling */
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .task-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .task-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    margin: 5px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+  }
+
+  .completed {
+    text-decoration: line-through;
+    color: #555;
+  }
+</style>
+</head>
+<body>
+  <h1>To-Do App</h1>
+
+  <!-- Input form for adding tasks -->
+  <form id="taskForm">
+    <input type="text" id="newTask" required>
+    <button type="submit">Add Task</button>
+  </form>
+
+  <!-- Lists for pending and completed tasks -->
+  <h2>Pending Tasks</h2>
+  <ul id="pendingTasks" class="task-list"></ul>
+
+  <h2>Completed Tasks</h2>
+  <ul id="completedTasks" class="task-list"></ul>
+
+  <script>
+    // JavaScript code for handling tasks
+    document.getElementById('taskForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const taskText = document.getElementById('newTask').value;
+      if (taskText.trim() !== '') {
+        const taskItem = document.createElement('li');
+        taskItem.classList.add('task-item');
+        taskItem.innerHTML = `
+          <span>${taskText}</span>
+          <button class="completeBtn">Complete</button>
+          <button class="deleteBtn">Delete</button>
+        `;
+        document.getElementById('pendingTasks').appendChild(taskItem);
+        document.getElementById('newTask').value = '';
+      }
+    });
+
+    // Function to mark a task as complete
+    function completeTask(taskItem) {
+      taskItem.classList.toggle('completed');
+      const completeBtn = taskItem.querySelector('.completeBtn');
+      completeBtn.textContent = taskItem.classList.contains('completed') ? 'Undo' : 'Complete';
+      const targetList = taskItem.classList.contains('completed') ? 'completedTasks' : 'pendingTasks';
+      document.getElementById(targetList).appendChild(taskItem);
+    }
+
+    // Function to delete a task
+    function deleteTask(taskItem) {
+      taskItem.remove();
+    }
+
+    // Event delegation for completing and deleting tasks
+    document.addEventListener('click', function(e) {
+      if (e.target.classList.contains('completeBtn')) {
+        completeTask(e.target.parentElement);
+      } else if (e.target.classList.contains('deleteBtn')) {
+        deleteTask(e.target.parentElement);
+      }
+    });
+  </script>
+</body>
+</html>
